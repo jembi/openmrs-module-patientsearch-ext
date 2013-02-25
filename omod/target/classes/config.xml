@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+
+	<!-- Module Properties -->
+	<id>hiepatientsearch</id>
+	<name>HIE Patient Search Module</name>
+	<version>1.0-SNAPSHOT</version>
+	<package>org.openmrs.module.hiepatientsearch</package>
+	<author>surangak</author>
+	<description>
+		HIE Patient Search module
+	</description>
+	<updateURL>https://modules.openmrs.org/modules/download/hiepatientsearch/update.rdf</updateURL>
+	<require_version>1.8.3</require_version>
+	<!-- / Module Properties -->
+
+	
+	<!-- Required Modules -->
+	<require_modules>
+																											
+		<require_module version="1.2.6">
+			org.openmrs.module.addresshierarchyrwanda
+		</require_module>
+			
+	</require_modules>
+	<!-- / Required Modules -->
+	
+	<!-- Module Activator -->
+	<activator>org.openmrs.module.hiepatientsearch.HIEPatientSearchActivator</activator>
+	
+	
+	<!-- Adds link to admin page -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.hiepatientsearch.extension.html.AdminList</class>
+	</extension>
+	
+	<!-- Maps hibernate file's, if present -->
+	<mappingFiles>
+				
+		HIEPatientSearch.hbm.xml
+				
+	</mappingFiles>
+
+	<!-- Internationalization -->
+	<!-- All message codes should start with hiepatientsearch. -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
+		<lang>es</lang>
+		<file>messages_es.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+
+</module>
+
