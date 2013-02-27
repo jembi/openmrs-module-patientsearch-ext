@@ -10,7 +10,7 @@
 	height: auto !important;
 }
 </style>
-
+ <script type="text/javascript" src="openmrsSearch.js"></script>
 <script language="javascript">
 function advancedSearch()
 {
@@ -68,8 +68,7 @@ function advancedSearch()
 	file="/scripts/jquery/dataTables/css/dataTables_jui.css" />
 <openmrs:htmlInclude
 	file="/scripts/jquery/dataTables/js/jquery.dataTables.min.js" />
-<openmrs:htmlInclude file="/scripts/jquery-ui/js/openmrsSearch.js" />
-
+<openmrs:htmlInclude file="${pageContext.request.contextPath}/moduleResources/hiepatientsearch/scripts/openmrsSearch.js"/>
 <openmrs:globalProperty key="patient.listingAttributeTypes"
 	var="attributesToList" />
 
