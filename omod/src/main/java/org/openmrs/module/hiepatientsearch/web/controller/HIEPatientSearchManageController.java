@@ -269,9 +269,7 @@ public class HIEPatientSearchManageController {
 				if (iterator.next().getAge() > Integer.parseInt(moreThanAge)) {
 
 				} else {
-					System.out.println("equals");
 					iterator.remove();
-					System.out.println("removed !");
 				}
 			}
 
@@ -281,9 +279,7 @@ public class HIEPatientSearchManageController {
 				if (iterator.next().getAge() < Integer.parseInt(lessThanAge)) {
 
 				} else {
-					System.out.println("equals");
 					iterator.remove();
-					System.out.println("removed !");
 				}
 			}
 
@@ -295,9 +291,7 @@ public class HIEPatientSearchManageController {
 						&& age < Integer.parseInt(lessThanAge)) {
 
 				} else {
-					System.out.println("equals");
 					iterator.remove();
-					System.out.println("removed !");
 				}
 			}
 
@@ -327,12 +321,9 @@ public class HIEPatientSearchManageController {
 		Iterator<Patient> iterator = patientLists.iterator();
 		while (iterator.hasNext()) {
 			if (iterator.next().getGender().equals(gender)) {
-				System.out.println("equals");
 				iterator.remove();
-				System.out.println("removed !");
 			}
 		}
-		System.out.println("D" + patientLists.size());
 		return patientLists;
 	}
 
