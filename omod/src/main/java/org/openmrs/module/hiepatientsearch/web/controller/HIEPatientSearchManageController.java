@@ -16,24 +16,20 @@ package org.openmrs.module.hiepatientsearch.web.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PersonAddress;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.addresshierarchyrwanda.AddressHierarchy;
 import org.openmrs.module.addresshierarchyrwanda.AddressHierarchyService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,7 +55,6 @@ public class HIEPatientSearchManageController {
 	@RequestMapping(value = "/module/hiepatientsearch/manage", method = RequestMethod.GET)
 	public String manager(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
-		System.out.println("Test ! triggered by the patient search action");
 		model.addAttribute("user", Context.getAuthenticatedUser());
 		
 		model = populateModel(model);
@@ -135,26 +130,18 @@ public class HIEPatientSearchManageController {
 			@RequestParam("date") Date dateString,
 			@RequestParam(value="gender") String gender, ModelMap model) {
 		String message = "Patient Id's" + patientIds + gender;
-		System.out.println(stateProvince);
-		System.out.println(countryDistrict);
 
 		String[] patientIdList = patientIds.split(",");
 
-		System.out.println(message);
-
 		List<Patient> patients = new ArrayList<Patient>();
 		List<Patient> patientLists = new ArrayList<Patient>();
-
+		List<Patient> s = new ArrayList<Patient>();
 
 		for (int i = 0; i < patientIdList.length; i++) {
 			patients = Context.getPatientService().getPatients(null,
 					patientIdList[i], null, false);
-			System.out.println("size is " + patients);
-			System.out.println("gender " + patients.get(0).getGender());
 			patientLists.add(patients.get(0));
 		}
-
-		System.out.println("Total size " + patientLists.size());
 
 		if (gender != null) {
 			patientLists = genderFilter(patientLists, gender);
@@ -169,28 +156,29 @@ public class HIEPatientSearchManageController {
 			// patientLists = dobFilter(patientLists, date);
 		}
 		
-		if (stateProvince != null && stateProvince != ""){
+		if (!stateProvince.trim().isEmpty()){
 			patientLists = stateProvinceFilter(patientLists, stateProvince);
+
 		}
 		
-		if (countryDistrict != null && countryDistrict != ""){
+		if (!countryDistrict.trim().isEmpty()){
 			patientLists = countryDistrictFilter(patientLists, countryDistrict);
 		}
 		
-		if (sector != null && sector != ""){
+		if (!sector.trim().isEmpty()){
 			patientLists = sectorFilter(patientLists, sector);
+
 		}
 		
-		if (cell != null && cell != ""){
+		if (!cell.trim().isEmpty()){
 			patientLists = cellFilter(patientLists, cell);
 		}
 		
-		if (village != null && village != ""){
+		if (!village.trim().isEmpty()){
 			patientLists = villageFilter(patientLists, village);
-		}
 
-		System.out.println("tesy final size = " + patientLists.size());
-		patientLists.add(Context.getPatientService().getPatient(2));
+		}
+		
 		model.addAttribute("patientLists", patientLists);
 		
 		model = populateModel(model);
@@ -204,8 +192,10 @@ public class HIEPatientSearchManageController {
 		while (iterator.hasNext()) {
 			Patient patient = iterator.next();
 			PersonAddress pa = patient.getPersonAddress();
+			if(pa.getAddress1() != null && pa.getAddress1() != ""){
 			if (!pa.getAddress1().equals(village)){
 				iterator.remove();
+			}
 			}
 		}
 	return patientLists;
@@ -216,8 +206,10 @@ public class HIEPatientSearchManageController {
 		while (iterator.hasNext()) {
 			Patient patient = iterator.next();
 			PersonAddress pa = patient.getPersonAddress();
+			if(pa.getAddress3() != null && pa.getAddress3() != ""){
 			if (!pa.getAddress3().equals(cell)){
 				iterator.remove();
+			}
 			}
 		}
 	return patientLists;
@@ -228,8 +220,10 @@ public class HIEPatientSearchManageController {
 		while (iterator.hasNext()) {
 			Patient patient = iterator.next();
 			PersonAddress pa = patient.getPersonAddress();
+			if(pa.getCityVillage() != null && pa.getCityVillage() != ""){
 			if (!pa.getCityVillage().equals(sector)){
 				iterator.remove();
+			}
 			}
 		}
 	return patientLists;
@@ -241,8 +235,10 @@ public class HIEPatientSearchManageController {
 		while (iterator.hasNext()) {
 			Patient patient = iterator.next();
 			PersonAddress pa = patient.getPersonAddress();
+			if(pa.getCountyDistrict() != null && pa.getCountyDistrict() != ""){
 			if (!pa.getCountyDistrict().equals(countryDistrict)){
 				iterator.remove();
+			}
 			}
 		}
 	return patientLists;
@@ -254,8 +250,11 @@ public class HIEPatientSearchManageController {
 			while (iterator.hasNext()) {
 				Patient patient = iterator.next();
 				PersonAddress pa = patient.getPersonAddress();
+
+				if(pa.getStateProvince() != null && pa.getStateProvince() != ""){
 				if (!pa.getStateProvince().equals(stateProvince)){
 					iterator.remove();
+				}
 				}
 			}
 		return patientLists;
@@ -301,14 +300,12 @@ public class HIEPatientSearchManageController {
 
 	
 	   @RequestMapping(value = "/redirect", method = RequestMethod.GET)
-	   public String redirect() {
-	     
+	   public String redirect() {     
 	      return "manage";
 	   }
 	   
 	   @RequestMapping(value = "/manage", method = RequestMethod.GET)
-	   public String finalPage() {
-	     
+	   public String finalPage() {	     
 	      return "manage";
 	   }
 	   
@@ -320,7 +317,7 @@ public class HIEPatientSearchManageController {
 	private List<Patient> genderFilter(List<Patient> patientLists, String gender) {
 		Iterator<Patient> iterator = patientLists.iterator();
 		while (iterator.hasNext()) {
-			if (iterator.next().getGender().equals(gender)) {
+			if (!iterator.next().getGender().equals(gender)) {
 				iterator.remove();
 			}
 		}

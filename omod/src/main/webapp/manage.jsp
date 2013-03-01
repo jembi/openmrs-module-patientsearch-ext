@@ -10,6 +10,12 @@
 	height: auto !important;
 }
 </style>
+<style>
+.blueband
+{
+background-color: #8FABC7;
+}  
+</style>
  <script type="text/javascript" src="openmrsSearch.js"></script>
 <script language="javascript">
 function advancedSearch()
@@ -18,6 +24,11 @@ function advancedSearch()
 	var val ;
 	var idString = '';
 		
+	if(table.rows.length == 2) {
+		document.getElementById("searchWidgetNotification").innerHTML = "Error, Please enter patient Name or identifiers";
+		return false;
+	}
+
 	for (var i = 1, row; row = table.rows[i]; i++) {
 		   //iterate through rows
 		   //rows would be accessed using the "row" variable assigned in the for loop
@@ -27,6 +38,14 @@ function advancedSearch()
 		}
 	
 	//most horrible ! fix later !
+	
+	if(!isNaN(document.getElementsByName("moreThanAge")[0].value)){
+		return false;
+	}
+	
+	if(!isNaN(document.getElementsByName("lessThanAge")[0].value)){
+		return false;
+	}
 	
 	document.getElementById('patientIds').value = idString ; 
 	
@@ -60,6 +79,8 @@ function advancedSearch()
 		document.getElementById('village').value = " ";
 	}
 	
+	document.getElementById('openmrsSearchTable').style.display = 'none';
+return true;
 }
 </script>
 
@@ -80,7 +101,7 @@ function advancedSearch()
 							{fieldName:"givenName", header:omsgs.givenName},
 							{fieldName:"middleName", header:omsgs.middleName},
 							{fieldName:"familyName", header:omsgs.familyName},
-							{fieldName:"age", header:omsgs.age},
+							{fieldName:"age", header:omsgs.age}, 
 							{fieldName:"gender", header:omsgs.gender},
 							{fieldName:"birthdateString", header:omsgs.birthdate},
 							{fieldName:"deathDateString", header:omsgs.deathdate}
@@ -132,39 +153,61 @@ function advancedSearch()
 	<b class="boxHeader"><spring:message code="Patient.find" /></b>
 	<div class="box">
 		<div class="searchWidgetContainer" id="findPatients"></div>
-	</div>
-</div>
-<br />
-<div>
-	<form name="input" method="POST">
+		<div id="error" style="background-color:lightpink;"></div>
+		
+		<table cellpadding="4" cellspacing="0" style="border: 1px solid #918E90">
+	<c:if test="${fn:length(patientLists) > 0}">
+	<tr>
+	<th>Identifer</th><th>Given Name</th><th>Middle Name</th><th>Family Name</th><th>Gender</th><th>Province</th><th>Sector</th><th>Cell</th><th>Village</th></tr>	
+		<c:forEach var="patient" items="${patientLists}" varStatus="varStatus">
+	<tr <c:if test="${varStatus.index % 2 == 1}"> style="background-color: #8FABC7;"</c:if>>
+	
+		<tr><td>
+			${patient.patientId}
+			</td>
+			<td>
+			${patient.givenName}
+			</td>
+			<td>
+			${patient.middleName}
+			</td>
+			<td>
+			${patient.familyName}
+			</td>
+			<td>
+			${patient.gender}
+			</td>
+			</tr>
+	</c:forEach>
+	</table>
+	</c:if>
+	<br/>
+		<form name="input" method="POST">
 		<fieldset>
 			<legend>
 				<b>Optional Search parameters</b>
 			</legend>
-			<br /> Age between <input type="text" name="moreThanAge"> and
-			<input type="text" name="lessThanAge"> <br /> DOB :
+			<br /> 
+			DOB :
 			<openmrs_tag:dateField formFieldName="date" startValue="" />
 			<br /> Gender :<input type="radio" name="gender" id="gender"
 				checked="checked" value="M">Male <input type="radio"
-				name="gender" id="gender" value="F">Female<br /> Province:
-
-			<%-- 		<form:select path="province">
-					  <form:option value="NONE" label="--- Select ---" />
-					  <form:options items="${stateProvince}" />
-				       </form:select> --%>
-
+				name="gender" id="gender" value="F">Female<br />
+				
+			Age between <input type="text" name="moreThanAge"> and
+			<input type="text" name="lessThanAge"> <br /> 
 
 			Province:
 			<form:select path="stateProvince" id="province"
 				items="${stateProvince}" />
-			<br /> District:
+			District:
 			<form:select path="countryDistrict" id="district"
 				items="${countryDistrict}" />
-			<br /> Sector:
+			Sector:
 			<form:select path="sector" id="sectors" items="${sector}" />
 			<br /> Cell:
 			<form:select path="cell" id="cells" items="${cell}" />
-			<br /> Village:
+			Village:
 			<form:select path="village" id="villages" items="${village}" />
 			<br /> <input type="hidden" id="patientIds" name="patientIds">
 			<input type="hidden" id="stateProvince" name="stateProvince">
@@ -172,9 +215,19 @@ function advancedSearch()
 			<input type="hidden" id="sector" name="sector"> 
 			<input type="hidden" id="cell" name="cell">
 			<input type="hidden" id="village" name="village"> 
-			<tab><tab><tab><input type="submit" value="Submit" label="Search" onclick="advancedSearch()">
+			<tab><tab><tab><input type="submit" value="Submit" label="Search" onclick="return advancedSearch()">
 		</fieldset>
 	</form>
+	
+	
+	
+	
+	
+	</div>
+</div>
+<br />
+<div>
+
 
 <%-- <c:if test="${not empty patientLists}">
 	<c:forEach var="patient" items='$(patientLists}'>
@@ -182,20 +235,7 @@ function advancedSearch()
 	</c:forEach>
 	</c:if> --%>
 	
-	<c:if test="${not empty patientLists}">
-	<table border="1">
-	<tr><td>Identifer</td><td>Given Name</td></tr>
-		<c:forEach var="patient" items="${patientLists}">
-		<tr><td>
-			${patient.patientId}
-			</td>
-			<td>
-			${patient.givenName}
-			</td>
-			</tr>
-	</c:forEach>
-	</table>
-	</c:if>
+
 
 </div>
 
