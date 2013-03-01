@@ -159,7 +159,7 @@ function OpenmrsSearch(div, showIncludeVoided, searchHandler, selectionHandler, 
 			searchLabel: ' ',
 			includeVoidedLabel: omsgs.includeVoided,
 			includeVerboseLabel: omsgs.showVerbose,
-			displayLength: 10,
+			displayLength: 50,
 			columnWidths: null,
 			columnRenderers: null,
 			columnVisibility: null
