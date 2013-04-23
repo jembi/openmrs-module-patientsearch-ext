@@ -1,0 +1,92 @@
+@CHARSET "UTF-8";
+#openmrsSearchTable_wrapper {
+	/* Removes the empty space between the widget and the Create New Patient section if the table is short */
+	/* Over ride the value set by datatables */
+	min-height: 0px;
+	height: auto !important;
+}
+
+.point{
+cursor:pointer;
+}
+#pagination {
+	
+	width: 15%;
+	height:auto;
+	float: left;
+}
+
+#pages {
+	
+	width: 85%;
+	height:auto;
+	float: left;
+	text-align: right;
+}
+
+#searchString {
+	
+	width: 25%;
+	float: right;
+	text-align: right;
+}
+/*######################################*/
+ul {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+
+#pagination-digg li {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 11px;
+	list-style: none;
+	margin-right: 2px;
+	float: right;
+}
+
+#pagination-digg a {
+	border: solid 1px #9aafe5;
+	margin-right: 2px;
+}
+
+#pagination-digg .active {
+	background: #2e6ab1;
+	color: #FFFFFF;
+	font-weight: bold;
+	display: block;
+	float: right;
+	padding: 3px 6px;
+}
+
+#pagination-digg a:link,#pagination-digg a:visited {
+	color: #0e509e;
+	display: block;
+	float: left;
+	padding: 3px 6px;
+	text-decoration: none;
+
+}
+
+#pagination-digg a:hover {
+	border: solid 1px #0e509e;
+}
+/*############################################################*/
+
+.blueband {
+	background-color: #8FABC7;
+}
+
+.centered-cell {
+	text-align: center;
+}
+
+.pageInfo {
+	text-align: left;
+	
+}
+
+
