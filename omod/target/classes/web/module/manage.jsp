@@ -1,212 +1,361 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+<!--<openmrs:htmlInclude file="/scripts/jquery/jquery-1.3.2.min.js"/>-->
+<openmrs:htmlInclude
+        file="/moduleResources/hiepatientsearch/media/js/jquery-1.7.2.js" />
+
+
+<%--<openmrs:htmlInclude file="/dwr/interface/DWRReportingService.js" />--%>
+<openmrs:htmlInclude
+        file="/moduleResources/hiepatientsearch/scripts/paginate.js" />
+
+<openmrs:htmlInclude
+        file="/moduleResources/hiepatientsearch/css/style.css" />
 <openmrs:require privilege="View Patients" otherwise="/login.htm"
-	redirect="/index.htm" />
+                 redirect="/index.htm" />
 <style>
-#openmrsSearchTable_wrapper {
-	/* Removes the empty space between the widget and the Create New Patient section if the table is short */
-	/* Over ride the value set by datatables */
-	min-height: 0px;
-	height: auto !important;
-}
+    #openmrsSearchTable_filter {
+        display: none;
+    }
+
+    .top {
+        display: none;
+    }
+
+    tr.odd {
+        background-color: #E2E4FF;
+    }
+
+    #openmrsSearchTable tbody tr:hover {
+        background-color: #F0E68C;
+        cursor: pointer;
+    }
+
+    .ui-state-default {
+        font-weight: bold;
+        background-image: none;
+        background-color: white;
+    }
+
+    .ui-button {
+        color: #1aad9b;
+        font-family: Verdana, 'Lucida Grande', 'Trebuchet MS', Arial, Sans-Serif;
+    }
+
+    .fg-button {
+        border-color: #1aad9b;
+        font-family: Verdana, 'Lucida Grande', 'Trebuchet MS', Arial, Sans-Serif;
+    }
+
+    th.ui-state-default {
+        border: none;
+        color: black;
+    }
+
+    #openmrsSearchTable_info {
+        padding-top: 10px;
+        font-weight: bold;
+    }
+
+    #openmrsSearchTable_paginate {
+        padding-top: 10px;
+    }
+
+    #openmrsSearchTable_length {
+        float: left;
+        text-align: left;
+    }
 </style>
- <script type="text/javascript" src="openmrsSearch.js"></script>
-<script language="javascript">
-function advancedSearch()
-{
-	var table = document.getElementById("openmrsSearchTable");
-	var val ;
-	var idString = '';
-		
-	for (var i = 1, row; row = table.rows[i]; i++) {
-		   //iterate through rows
-		   //rows would be accessed using the "row" variable assigned in the for loop
-			  val = row.cells[0].innerHTML;
-		   	  idString = idString + val +"," ;
-		     //columns would be accessed using the "col" variable assigned in the for loop 
-		}
-	
-	//most horrible ! fix later !
-	
-	document.getElementById('patientIds').value = idString ; 
-	
-	if(document.getElementById('province').value != "select province"){
-	document.getElementById('stateProvince').value = document.getElementById('province').value;
-	}else {
-		document.getElementById('stateProvince').value = " ";
-	}
-	
-	if(document.getElementById('district').value != "select district"){
-	document.getElementById('countryDistrict').value = document.getElementById('district').value;
-	} else {
-		document.getElementById('countryDistrict').value = " ";
-	}
-	
-	if(document.getElementById('sectors').value != "select sector"){
-	document.getElementById('sector').value = document.getElementById('sectors').value;
-	}else{
-		document.getElementById('sector').value = " ";
-	}
-	
-	if(document.getElementById('cells').value != "select cell"){
-	document.getElementById('cell').value = document.getElementById('cells').value;
-	}else {
-		
-	}
-	
-	if(document.getElementById('villages').value != "select village"){
-	document.getElementById('village').value = document.getElementById('villages').value;
-	}else {
-		document.getElementById('village').value = " ";
-	}
-	
-}
+<script type="text/javascript">
+    var $j = jQuery.noConflict();
 </script>
+
+<script src="<openmrs:contextPath/>/dwr/interface/DWRMyModuleService.js"></script>
+<script language="javascript">
+    $j(window).load(function() {
+        document.getElementById('findRHEAPatients').style.display = "block";
+        document.getElementById('results').style.display = "block";
+        document.getElementById("patientSearch").focus();
+    });
+</script>
+
 
 <openmrs:htmlInclude file="/dwr/interface/DWRPatientService.js" />
 <openmrs:htmlInclude
-	file="/scripts/jquery/dataTables/css/dataTables_jui.css" />
+        file="/scripts/jquery/dataTables/css/dataTables_jui.css" />
 <openmrs:htmlInclude
-	file="/scripts/jquery/dataTables/js/jquery.dataTables.min.js" />
-<openmrs:htmlInclude file="${pageContext.request.contextPath}/moduleResources/hiepatientsearch/scripts/openmrsSearch.js"/>
+        file="/scripts/jquery/dataTables/js/jquery.dataTables.min.js" />
+<%--<openmrs:htmlInclude
+	file="${pageContext.request.contextPath}/moduleResources/hiepatientsearch/scripts/openmrsSearch.js" />--%>
+
 <openmrs:globalProperty key="patient.listingAttributeTypes"
-	var="attributesToList" />
+                        var="attributesToList" />
 
 <script type="text/javascript">
-				var lastSearch;
-				$j(document).ready(function() {
-					new OpenmrsSearch("findPatients", false, doPatientSearch, doSelectionHandler,
-						[	{fieldName:"identifier", header:omsgs.identifier},
-							{fieldName:"givenName", header:omsgs.givenName},
-							{fieldName:"middleName", header:omsgs.middleName},
-							{fieldName:"familyName", header:omsgs.familyName},
-							{fieldName:"age", header:omsgs.age},
-							{fieldName:"gender", header:omsgs.gender},
-							{fieldName:"birthdateString", header:omsgs.birthdate},
-							{fieldName:"deathDateString", header:omsgs.deathdate}
-						],
-						{
-                            searchLabel: '<spring:message code="Patient.searchBox" javaScriptEscape="true"/>',
-                            searchPlaceholder:'<spring:message code="Patient.searchBox.placeholder" javaScriptEscape="true"/>',
-                            attributes: [
-                                     	<c:forEach var="attribute" items="${fn:split(attributesToList, ',')}" varStatus="varStatus">
-                                           <c:if test="${fn:trim(attribute) != ''}">
-                                           <c:set var="attributeName" value="${fn:trim(attribute)}" />
-                                			     <c:choose>
-                                					<c:when test="${varStatus.index == 0}">
-                                						{name:"${attributeName}", header:"<spring:message code="PersonAttributeType.${fn:replace(attributeName, ' ', '')}" text="${attributeName}"/>"}
-                                					</c:when>
-                                					<c:otherwise>
-                                						,{name:"${attributeName}", header:"<spring:message code="PersonAttributeType.${fn:replace(attributeName, ' ', '')}" text="${attributeName}"/>"}
-                                					</c:otherwise>
-                                				 </c:choose>
-                                           </c:if>
-                                   		</c:forEach>
-                                     ]
-                            <c:if test="${not empty param.phrase}">
-                                , searchPhrase: '<spring:message text="${ param.phrase }" javaScriptEscape="true"/>'
-                            </c:if>                      
-                        });
+    function doNav(patientId) {
+        ctx = "${pageContext.request.contextPath}";
+        document.location.href = ctx + '/patientDashboard.form?patientId='
+                + patientId;
+    }
 
-					//set the focus to the first input box on the page(in this case the text box for the search widget)
-					var inputs = document.getElementsByTagName("input");
-				    if(inputs[0])
-				    	inputs[0].focus();
+    var $j = jQuery.noConflict();
+
+    var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
+    $j(document).ready(function() {
+        $j("#patientSearch").keyup(function() {
+
+            $j('.filter').find('input:text').val('');
+            $j('.filter').prop('checked', false);
+            delay(function(){
+            keydown();
+            }, 400 );
+        });
+
+        $j('.adh').change(function() {
+            var level = $j(this).attr('id');
+            //alert("Level : "+level);
+            var selectedValue = $j(this).val();
+            //alert("Value : "+selectedValue);
+            if(selectedValue != "00") {
+                loadFile(selectedValue,level);
+            }
+        });
+
+        $j('#advanced').click(function() {
+            $j('#filters').toggle(400);
+            return false;
+        });
+    });
+
+    function processData(allText,id,level) {
+        var allTextLines = allText.split(/\r\n|\n/);
+        var headers = allTextLines[0].split(',');
+        //var lines = [];
+        var optionsValues = '<option value="00"> --Select-- </option>';
+
+        //optionsValues = '<select>';
+        //alert("ID :"+ id);
+
+        for (var i=0; i < allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+            var selectToChange = "";
+            if(level == "ad_province"){
+                if(data[1] == id)
+                {
+                    //lines.push(data[2]);
+                    optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
+                }
+                selectToChange = "ad_district";
+            }
+            if(level == "ad_district"){
+                if(data[1] == id)
+                {
+                    //lines.push(data[2]);
+                    optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
+                }
+                selectToChange = "ad_sector";
+            }
+            if(level == "ad_sector"){
+                if(data[1] == id)
+                {
+                    //lines.push(data[2]);
+                    optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
+                }
+                selectToChange = "ad_cell";
+            }
+            if(level == "ad_cell"){
+                if(data[1] == id)
+                {
+                    //lines.push(data[2]);
+                    optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
+                }
+                selectToChange = "ad_village";
+            }
 
 
-				});
+        }
+        //alert("Niveau :"+ level);
+        document.getElementById(selectToChange).innerHTML = optionsValues;
+        //alert(lines);
+        //optionsValues += '</select>';
+        //var options = $j('#district');
+        //options.replaceWith(optionsValues);
 
-				function doSelectionHandler(index, data) {
-					document.location = "${model.postURL}?patientId=" + data.patientId + "&phrase=" + lastSearch;
-				}
+        //optionsValues = '';
 
-				//searchHandler for the Search widget
-				function doPatientSearch(text, resultHandler, getMatchCount, opts) {
-					lastSearch = text;
-					DWRPatientService.findCountAndPatients(text, opts.start, opts.length, getMatchCount, resultHandler);
-				}
+    }
+    function loadFile(addressValue,level){
+        var ctx = "${pageContext.request.contextPath}";
+        //var path = ctx+"moduleResources/hiepatientsearch/";
+        //alert(ctx);
+        var path = "";
+        if(level == "ad_province") {
+            path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/District.txt";
+        }
+        if(level == "ad_district") {
+            path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/Sector.txt";
+        }
+        if(level == "ad_sector") {
+            path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/Cell.txt";
+        }
+        if(level == "ad_cell") {
+            path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/Village.txt";
+        }
 
-			</script>
+        $j.ajax({
+            type: "GET",
+            url:path,
+            dataType: "text",
+            success: function(data) {processData(data,addressValue,level);}
+        });
+
+    }
+
+</script>
+<h2>
+    <spring:message code="hiepatientsearch.search.title" />
+</h2>
 
 <div>
-	<b class="boxHeader"><spring:message code="Patient.find" /></b>
-	<div class="box">
-		<div class="searchWidgetContainer" id="findPatients"></div>
-	</div>
+    <b class="boxHeader"><spring:message code="Patient.find" /></b>
+    <div class="box">
+
+        <div id="findRHEAPatients" style="display: none" align="left">
+            <div>
+                &nbsp;&nbsp; Patient Identifier or Patient Name:<input type="text" id="patientSearch"> <span id="advanced" style="display: none"><a href="#" style="color: blue;">Show/Hide Search Filters</a></span>
+            </div>
+
+            <div id="errorMsg" style="color: #FF0000"></div>
+            <br />
+        </div>
+
+        <div id="filters" style="display: none;">
+            <fieldset>
+                <legend>
+                    <b>Search Result Filters</b>
+                </legend>
+                <br /> DOB : <input type="date" name="date" id="date"
+                                    oninput="assess(0)" class="filter"> &nbsp;&nbsp;Age between <input
+                    type="text" id="moreThanAge" name="moreThanAge" onkeyup="assess(0)" class="filter">
+                and <input type="text" id="lessThanAge" name="lessThanAge"
+                           onkeyup="assess(0)" class="filter"><br /> <br /> Gender :<input
+                    type="radio" name="gender" id="genderMale" value="M"
+                    onchange="assess(0);" class="filter">Male <input type="radio"
+                                                      name="gender" id="genderFemale" value="F" onchange="assess(0);" class="filter">Female
+                <br /> <br /><%--Province:
+				<form:select path="stateProvince" id="province"
+					items="${stateProvince}" onchange="assess(0);" />
+				District:
+				<form:select path="countryDistrict" id="district"
+					items="${countryDistrict}" onchange="assess(0);" />
+				Sector:
+				<form:select path="sector" id="sectors" items="${sector}"
+					onchange="assess(0);" />
+				Cell:
+				<form:select path="cell" id="cells" items="${cell}"
+					onchange="assess(0);" />
+				Village:
+				<form:select path="village" id="villages" items="${village}"
+					onchange="assess(0);" />--%>
+
+                Province: <select name="prov" id="ad_province" class = "adh filter" onchange="assess(0);">
+                <option value="00">--Select--</option>
+                <option value="01">Kigali Province</option>
+                <option value="02">Southern Province/Amajyepfo</option>
+                <option value="03">Western Province/Uburengerazuba</option>
+                <option value="04">Northern Province/Amajyaruguru</option>
+                <option value="05">Eastern Province/Uburasirazuba</option>
+            </select>
+                District: <select name="dist" id="ad_district" class="adh filter" onchange="assess(0);">
+                <option value="00">--Select--</option>
+            </select>
+                Sector: <select name="sect" id="ad_sector" class="adh filter" onchange="assess(0);">
+                <option value="00">--Select--</option>
+            </select>
+                Cell: <select name="cell" id="ad_cell" class="adh filter" onchange="assess(0);">
+                <option value="00">--Select--</option>
+            </select>
+                Village: <select name="vill" id="ad_village" onchange="assess(0);" class="filter">
+                <option value="00">--Select--</option>
+            </select>
+
+                <br /> <input type="hidden" id="patientIds" name="patientIds">
+                <input type="hidden" id="stateProvince" name="stateProvince">
+                <input type="hidden" id="countryDistrict" name="countryDistrict">
+                <input type="hidden" id="sector" name="sector"> <input
+                    type="hidden" id="cell" name="cell"> <input type="hidden"
+                                                                id="village" name="village">
+            </fieldset>
+            <br />
+
+        </div>
+
+        <div id="searchString"></div>
+        <div id="results" style="display: none;">
+        </div>
+        <div id="resultsBackup" style="display: none"></div>
+
+        <table cellpadding="2" cellspacing="0" style="width: 100%">
+            <c:if test="${fn:length(patientLists) > 0}">
+                <tr>
+                    <th>Identifer</th>
+                    <th>Given Name</th>
+                    <th>Middle Name</th>
+                    <th>Family Name</th>
+                    <th>Gender</th>
+                    <th>Province</th>
+                    <th>District</th>
+                    <th>Sector</th>
+                    <th>Cell</th>
+                    <th>Village</th>
+                </tr>
+                <c:forEach var="patient" items="${patientLists}"
+                           varStatus="varStatus">
+                    <tr
+                    <c:if test="${varStatus.index % 2 == 0}"> style="background-color: #E6E6FA"</c:if>>
+
+                    <td>${patient.patientId}</td>
+                    <td>${patient.givenName}</td>
+                    <td>${patient.middleName}</td>
+                    <td>${patient.familyName}</td>
+                    <td>${patient.gender}</td>
+                    <td>${patient.personAddress.stateProvince}</td>
+                    <td>${patient.personAddress.countyDistrict}</td>
+                    <td>${patient.personAddress.cityVillage}</td>
+                    <td>${patient.personAddress.address3}</td>
+                    <td>${patient.personAddress.address1}</td>
+                    </tr>
+                </c:forEach>
+            </c:if>
+        </table>
+        <c:if test="${noResults == true}">
+            <div style="background-color: lightpink;">Sorry, your search
+                did not result in any matching results. Please try again</div>
+        </c:if>
+    </div>
 </div>
 <br />
 <div>
-	<form name="input" method="POST">
-		<fieldset>
-			<legend>
-				<b>Optional Search parameters</b>
-			</legend>
-			<br /> Age between <input type="text" name="moreThanAge"> and
-			<input type="text" name="lessThanAge"> <br /> DOB :
-			<openmrs_tag:dateField formFieldName="date" startValue="" />
-			<br /> Gender :<input type="radio" name="gender" id="gender"
-				checked="checked" value="M">Male <input type="radio"
-				name="gender" id="gender" value="F">Female<br /> Province:
-
-			<%-- 		<form:select path="province">
-					  <form:option value="NONE" label="--- Select ---" />
-					  <form:options items="${stateProvince}" />
-				       </form:select> --%>
 
 
-			Province:
-			<form:select path="stateProvince" id="province"
-				items="${stateProvince}" />
-			<br /> District:
-			<form:select path="countryDistrict" id="district"
-				items="${countryDistrict}" />
-			<br /> Sector:
-			<form:select path="sector" id="sectors" items="${sector}" />
-			<br /> Cell:
-			<form:select path="cell" id="cells" items="${cell}" />
-			<br /> Village:
-			<form:select path="village" id="villages" items="${village}" />
-			<br /> <input type="hidden" id="patientIds" name="patientIds">
-			<input type="hidden" id="stateProvince" name="stateProvince">
-			<input type="hidden" id="countryDistrict" name="countryDistrict">
-			<input type="hidden" id="sector" name="sector"> 
-			<input type="hidden" id="cell" name="cell">
-			<input type="hidden" id="village" name="village"> 
-			<tab><tab><tab><input type="submit" value="Submit" label="Search" onclick="advancedSearch()">
-		</fieldset>
-	</form>
-
-<%-- <c:if test="${not empty patientLists}">
-	<c:forEach var="patient" items='$(patientLists}'>
-		${patient}
-	</c:forEach>
-	</c:if> --%>
-	
-	<c:if test="${not empty patientLists}">
-	<table border="1">
-	<tr><td>Identifer</td><td>Given Name</td></tr>
-		<c:forEach var="patient" items="${patientLists}">
-		<tr><td>
-			${patient.patientId}
-			</td>
-			<td>
-			${patient.givenName}
-			</td>
-			</tr>
-	</c:forEach>
-	</table>
-	</c:if>
 
 </div>
-
 <c:if test="${empty model.hideAddNewPatient}">
-	<openmrs:hasPrivilege privilege="Add Patients">
-		<br /> &nbsp; <spring:message code="general.or" />
-		<br />
-		<br />
-		<openmrs:portlet id="addPersonForm" url="addPersonForm"
-			parameters="personType=patient|postURL=admin/person/addPerson.htm|viewType=${model.viewType}" />
-	</openmrs:hasPrivilege>
+    <openmrs:hasPrivilege privilege="Add Patients">
+        <br /> &nbsp; <spring:message code="general.or" />
+        <br />
+        <br />
+        <c:set var="baseUrl" value="${pageContext.request.contextPath}" />
+        <openmrs:portlet id="addPersonForm" url="addPersonForm"
+                         parameters="personType=patient|postURL=${baseUrl}/admin/person/addPerson.htm|viewType=shortEdit" />
+    </openmrs:hasPrivilege>
 </c:if>
 
 

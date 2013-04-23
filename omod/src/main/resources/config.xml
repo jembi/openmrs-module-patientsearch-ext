@@ -7,7 +7,7 @@
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
 	<package>${project.parent.groupId}.${project.parent.artifactId}</package>
-	<author>surangak</author>
+	<author>Suranga K and Desire M - JHSR</author>
 	<description>
 		${project.parent.description}
 	</description>
@@ -58,6 +58,25 @@
 		<file>messages_es.properties</file>
 	</messages>
 	<!-- /Internationalization -->
+	
+	<dwr>
+        <allow>
+            <create creator="new" javascript="DWRMyModuleService">
+                <param name="class" value="${project.parent.groupId}.${project.parent.artifactId}.web.dwr.DWRMyModuleService"/>
+                <include method="findPatients"/>
+                <include method="filter"/>
+            </create>
+        </allow>
+ 
+        <signatures>
+            <![CDATA[
+            import org.openmrs.module.hiepatientsearch.web.dwr.DWRMyModuleService;
+            DWRMyModuleService.findPatients(String searchValue, boolean includeVoided);
+            DWRMyModuleService.filter(String ids,String moreThanAge, String lessThanAge, String gender, String date, String province, String district, String sectors, String cells, String villages);          
+
+            ]]>
+        </signatures>
+    </dwr> 
 
 </module>
 
