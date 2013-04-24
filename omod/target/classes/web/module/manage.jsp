@@ -139,7 +139,7 @@
         var headers = allTextLines[0].split(',');
         //var lines = [];
         var optionsValues = '<option value="00"> --Select-- </option>';
-
+        var voidValues= '<option value="00"> --Select-- </option>';
         //optionsValues = '<select>';
         //alert("ID :"+ id);
 
@@ -153,6 +153,10 @@
                     optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
                 }
                 selectToChange = "ad_district";
+                document.getElementById("ad_sector").innerHTML = voidValues;
+                document.getElementById("ad_cell").innerHTML = voidValues;
+                document.getElementById("ad_village").innerHTML = voidValues;
+               
             }
             if(level == "ad_district"){
                 if(data[1] == id)
@@ -161,6 +165,8 @@
                     optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
                 }
                 selectToChange = "ad_sector";
+                document.getElementById("ad_cell").innerHTML = voidValues;
+                document.getElementById("ad_village").innerHTML = voidValues;
             }
             if(level == "ad_sector"){
                 if(data[1] == id)
@@ -169,6 +175,7 @@
                     optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
                 }
                 selectToChange = "ad_cell";
+                document.getElementById("ad_village").innerHTML = voidValues;
             }
             if(level == "ad_cell"){
                 if(data[1] == id)
