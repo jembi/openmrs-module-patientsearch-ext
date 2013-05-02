@@ -19,6 +19,7 @@ var $f = jQuery.noConflict();
 
 function assess(id) {
       //alert("change");
+	 document.getElementById('filter_loading').style.display =   'inline';
 	var patientSearchId = document.getElementById('patientSearch').value;
 
 	if (patientSearchId == '') {
@@ -27,6 +28,7 @@ function assess(id) {
         document.getElementById('advanced').style.display = 'none';
         document.getElementById('results').style.display = 'none';
         document.getElementById('searchString').style.display = 'none';
+        document.getElementById('filter_loading').style.display =   'none';
 		return;
 	} else {
 		//document.getElementById('filters').style.display = 'block';
@@ -53,16 +55,16 @@ function assess(id) {
 	var dob = document.getElementById('date').value;
 
 	var province = "";
-    if($f("#ad_province").val() != "00"){ province = $f("#ad_province option:selected").text(); }
+    if($f("#ad_province").val() != "00" && $f("#ad_province").val() != "55" ){ province = $f("#ad_province option:selected").text(); }
 
 	var district = "";
-    if($f("#ad_district").val() != "00"){ district = $f("#ad_district option:selected").text(); }
+    if($f("#ad_district").val() != "00" && $f("#ad_district").val() != "55"){ district = $f("#ad_district option:selected").text(); }
 
 	var sectors = "";
-    if($f("#ad_sector").val() != "00"){ sectors = $f("#ad_sector option:selected").text(); }
+    if($f("#ad_sector").val() != "00" && $f("#ad_sector").val() != "55"){ sectors = $f("#ad_sector option:selected").text(); }
 
 	var cells = "";
-    if($f("#ad_cell").val() != "00"){ cells = $f("#ad_cell option:selected").text(); }
+    if($f("#ad_cell").val() != "00" && $f("#ad_cell").val() != "55"){ cells = $f("#ad_cell option:selected").text(); }
 
 	var villages = "";
     if($f("#ad_village").val() != "00"){ villages = $f("#ad_village option:selected").text(); }
@@ -175,7 +177,7 @@ function assess(id) {
 				+ tfooter;
         /*document.getElementById('resultsBackup').innerHTML = tbkupheader
             + tbody + tfooter;*/
-
+		
 		$f('#openmrsSearchTable')
 				.dataTable(
 						{
@@ -186,7 +188,7 @@ function assess(id) {
 							sDom : '<f<t><"clear"><"clear"><"clear">ip<"clear"><"clear"><"clear"><"clear">l>'
 
 						});
-
+		document.getElementById('filter_loading').style.display =   'none';
 		if (patientSearchId != '') {
 			var data_Length = $f("select[name=openmrsSearchTable_length]")
 					.val();
@@ -210,7 +212,7 @@ function assess(id) {
 		
 
 	}
-
+	
     DWRMyModuleService.filter(idString, moreThanAgeString, lessThanAgeString,
         gender, dob, province, district, sectors, cells, villages, obj);
 
@@ -229,6 +231,7 @@ function keydown() {
         document.getElementById('advanced').style.display = 'none';
         document.getElementById('results').style.display = 'none';
         document.getElementById('searchString').style.display = 'none';
+        document.getElementById('loading').style.display =   'none';
 		return;
 	} else {
 		//document.getElementById('filters').style.display = 'block';
@@ -329,7 +332,7 @@ function keydown() {
 				+ tfooter;
 		document.getElementById('resultsBackup').innerHTML = tbkupheader
 				+ tbody + tfooter;
-
+		document.getElementById('loading').style.display =   'none';
 		$f('#openmrsSearchTable')
 				.dataTable(
 						{

@@ -110,12 +110,13 @@
 
     $j(document).ready(function() {
         $j("#patientSearch").keyup(function() {
-
+        	document.getElementById('loading').style.display =   'inline';
             $j('.filter').find('input:text').val('');
             $j('.filter').prop('checked', false);
             delay(function(){
             keydown();
             }, 400 );
+            
         });
 
         $j('.adh').change(function() {
@@ -152,6 +153,10 @@
                     //lines.push(data[2]);
                     optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
                 }
+                if(id == 55){
+                	optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
+                }
+                
                 selectToChange = "ad_district";
                 document.getElementById("ad_sector").innerHTML = voidValues;
                 document.getElementById("ad_cell").innerHTML = voidValues;
@@ -164,6 +169,10 @@
                     //lines.push(data[2]);
                     optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
                 }
+                if(id == 55){
+                	optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
+                }
+                
                 selectToChange = "ad_sector";
                 document.getElementById("ad_cell").innerHTML = voidValues;
                 document.getElementById("ad_village").innerHTML = voidValues;
@@ -174,6 +183,10 @@
                     //lines.push(data[2]);
                     optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
                 }
+                if(id == 55){
+                	optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
+                }
+                
                 selectToChange = "ad_cell";
                 document.getElementById("ad_village").innerHTML = voidValues;
             }
@@ -183,11 +196,25 @@
                     //lines.push(data[2]);
                     optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
                 }
+                if(id == 55){
+                	optionsValues += '<option value="' + data[0] + '">' + data[2] + '</option>';
+                }
                 selectToChange = "ad_village";
             }
 
 
         }
+        
+        if(level == "ad_province"){
+        	optionsValues += '<option value="55">Show All Sectors</option>';
+        }
+        if(level == "ad_district"){
+        	optionsValues += '<option value="55">Show All Cells</option>';
+        }
+        if(level == "ad_sector"){
+        	optionsValues += '<option value="55">Show All Villages</option>';
+        }
+        
         //alert("Niveau :"+ level);
         document.getElementById(selectToChange).innerHTML = optionsValues;
         //alert(lines);
@@ -199,21 +226,22 @@
 
     }
     function loadFile(addressValue,level){
-        var ctx = "${pageContext.request.contextPath}";
+        var path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/";
         //var path = ctx+"moduleResources/hiepatientsearch/";
         //alert(ctx);
-        var path = "";
+        //var path = "";
         if(level == "ad_province") {
-            path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/District.txt";
+            //path += "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/District.txt";
+        	path += "District.txt";
         }
         if(level == "ad_district") {
-            path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/Sector.txt";
+            path += "Sector.txt";
         }
         if(level == "ad_sector") {
-            path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/Cell.txt";
+            path += "Cell.txt";
         }
         if(level == "ad_cell") {
-            path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/Village.txt";
+            path += "Village.txt";
         }
 
         $j.ajax({
@@ -236,7 +264,10 @@
 
         <div id="findRHEAPatients" style="display: none" align="left">
             <div>
-                &nbsp;&nbsp; Patient Identifier or Patient Name:<input type="text" id="patientSearch"> <span id="advanced" style="display: none"><a href="#" style="color: blue;">Show/Hide Search Filters</a></span>
+                &nbsp;&nbsp; Patient Identifier or Patient Name:<input type="text" id="patientSearch"><span id = "loading" style="display: none"> <input
+			type="image"
+			src="${pageContext.request.contextPath}/moduleResources/hiepatientsearch/media/images/loading.gif"
+			></span><br /> <span id="advanced" style="display: none"><a href="#" style="color: blue;">Show/Hide Search Filters</a></span>
             </div>
 
             <div id="errorMsg" style="color: #FF0000"></div>
@@ -248,6 +279,10 @@
                 <legend>
                     <b>Search Result Filters</b>
                 </legend>
+                <span id = "filter_loading" style="display: none; float: right; font-style: italic; font-size: x-small;">loading <input
+			type="image"
+			src="${pageContext.request.contextPath}/moduleResources/hiepatientsearch/media/images/filter_loading.gif"
+			></span>
                 <br /> DOB : <input type="date" name="date" id="date"
                                     oninput="assess(0)" class="filter"> &nbsp;&nbsp;Age between <input
                     type="text" id="moreThanAge" name="moreThanAge" onkeyup="assess(0)" class="filter">
@@ -279,6 +314,8 @@
                 <option value="03">Western Province/Uburengerazuba</option>
                 <option value="04">Northern Province/Amajyaruguru</option>
                 <option value="05">Eastern Province/Uburasirazuba</option>
+                <option value="55">Show All Districts</option>
+                
             </select>
                 District: <select name="dist" id="ad_district" class="adh filter" onchange="assess(0);">
                 <option value="00">--Select--</option>
