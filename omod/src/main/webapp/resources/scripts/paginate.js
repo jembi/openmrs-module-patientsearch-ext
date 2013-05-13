@@ -343,6 +343,7 @@ function keydown() {
 							sDom : '<f<t><"clear"><"clear"><"clear">ip<"clear"><"clear"><"clear"><"clear">l>'
 
 						});
+		document.getElementById('filters').style.display = 'block';
 
 		if (patientSearchId != '') {
 			var data_Length = $f("select[name=openmrsSearchTable_length]")
