@@ -23,20 +23,16 @@ public class DWRMyModuleService {
 	private static Integer maximumResults;
  
  public Collection<PatientListItem> filter(String ids, String moreThanAge, String lessThanAge, String gender, String date, String province, String district, String sectors, String cells, String villages) throws ParseException {
-	System.out.println("---------------------> date : " + province);
-	// ids = ids.replaceFirst("|", "");
 	 ids = ids.trim();
 	 String[] idList = ids.split(",");
 	 List<Patient> patients = new ArrayList<Patient>();
 	 
 	 for(String s : idList){
-		 System.out.println(s);
 		 if(!s.isEmpty()){
 		 Patient patient = Context.getPatientService().getPatient(Integer.parseInt(s));
 		 patients.add(patient);
 		 }
 	 }
-	 System.out.println(patients.size());
 	 
 	 if(moreThanAge != null && !moreThanAge.trim().isEmpty()){
 		 Iterator<Patient> i = patients.iterator();
@@ -89,34 +85,25 @@ public class DWRMyModuleService {
 			 }
 		 }
 	 } 
-	 
-	 System.out.println("After gender" + patients.size());
-	 
+	 	 
 	 if(province != null && !province.trim().isEmpty()){
 		 if(!province.equals("select province")){
 			 Iterator<Patient> i = patients.iterator();
 			 while(i.hasNext()){
 				 Patient p = i.next();
-				 
-
-				 System.out.println("%" + p.getPersonAddress().getStateProvince());
-				
+				 				
 				 if(p.getPersonAddress() != null && p.getPersonAddress().getStateProvince() != null && p.getPersonAddress().getStateProvince().trim().isEmpty() == false){
-				 System.out.println(" in        !");
 				 if(!p.getPersonAddress().getStateProvince().equalsIgnoreCase(province)){
-					 System.out.println("remove !");
 					 i.remove();
 				 }
 				 
 				 }else{
 					 i.remove();
-					 System.out.println("not is !");
 				 }
 				 
 			 }
 		 }
 	 }
-	 System.out.println("After genderW" + patients.size()); 
 	 
 	 if(district != null && !district.trim().isEmpty()){
 		 if(!district.equals("select district")){
@@ -135,20 +122,15 @@ public class DWRMyModuleService {
 			 }
 		 }
 	 }
-	 
-	 System.out.println("After genderU" + patients.size()); 
-	 
+	 	 
 	 if(sectors != null && !sectors.trim().isEmpty()){
 		 if(!sectors.equals("select sector")){
 			 Iterator<Patient> i = patients.iterator();
 			 while(i.hasNext()){
 				 Patient p = i.next();
 				 
-				 //if(p.getPersonAddress() != null && p.getPersonAddress().getAddress3() != null && p.getPersonAddress().getAddress3().trim().isEmpty() == false){
 				 if(p.getPersonAddress() != null && p.getPersonAddress().getCityVillage() != null && p.getPersonAddress().getCityVillage().trim().isEmpty() == false){
 				 if(!p.getPersonAddress().getCityVillage().equalsIgnoreCase(sectors)){
-					 System.out.println("removed ! # + " + sectors);
-					 System.out.println(p.getPersonAddress().getCityVillage());
 					 i.remove();
 				 }
 				 }else{
@@ -157,16 +139,13 @@ public class DWRMyModuleService {
 			 }
 		 }
 	 }
-	 
-	 System.out.println("After genderX" + patients.size()); 
-	 
+	 	 
 	 if(cells != null && !cells.trim().isEmpty()){
 		 if(!cells.equals("select cell")){
 			 Iterator<Patient> i = patients.iterator();
 			 while(i.hasNext()){
 				 Patient p = i.next();
 				 
-				 //if(p.getPersonAddress() != null && p.getPersonAddress().getAddress1() != null && p.getPersonAddress().getAddress1().trim().isEmpty() == false){
 				 if(p.getPersonAddress() != null && p.getPersonAddress().getNeighborhoodCell() != null && p.getPersonAddress().getNeighborhoodCell().trim().isEmpty() == false){
 				 if(!p.getPersonAddress().getNeighborhoodCell().equalsIgnoreCase(cells)){
 					 i.remove();
@@ -176,17 +155,13 @@ public class DWRMyModuleService {
 				 }
 			 }
 		 }
-	 }
-	 System.out.println("After genderY" + patients.size()); 
-	 
+	 }	 
 	 
 	 if(villages != null && !villages.trim().isEmpty()){
 		 if(!villages.equals("select village")){
 			 Iterator<Patient> i = patients.iterator();
 			 while(i.hasNext()){
 				 Patient p = i.next();
-				 
-				 //if(p.getPersonAddress() != null && p.getPersonAddress().getCityVillage() != null && p.getPersonAddress().getCityVillage().trim().isEmpty() == false){
 				 if(p.getPersonAddress() != null && p.getPersonAddress().getAddress1() != null && p.getPersonAddress().getAddress1().trim().isEmpty() == false){
 				 if(!p.getPersonAddress().getAddress1().equalsIgnoreCase(villages)){
 					 i.remove();
@@ -197,9 +172,7 @@ public class DWRMyModuleService {
 			 }
 		 }
 	 }
-	 
-	 System.out.println("After genderZ" + patients.size()); 
-	 
+	 	 
 	 List<PatientListItem> patientList = new Vector<PatientListItem>();
 	 
 	 for (Patient p : patients)
@@ -224,7 +197,6 @@ public class DWRMyModuleService {
 	 * @should logged in user should load their own patient object
 	 */
 	public Collection<PatientListItem> findPatients(String searchValue, boolean includeVoided) {
-		System.out.println("EEEEEEEEEEEEE");
 		return findBatchOfPatients(searchValue, includeVoided, null, null);
 	}
 	
@@ -241,7 +213,6 @@ public class DWRMyModuleService {
 	 * @since 1.8
 	 */
 	private Collection<PatientListItem> findBatchOfPatients(String searchValue, boolean includeVoided, Integer start, Integer length) {
-		System.out.println("hit hit hit ");
 		if (maximumResults == null)
 			maximumResults = getMaximumSearchResults();
 		if (length != null && length > maximumResults)
@@ -258,8 +229,7 @@ public class DWRMyModuleService {
 			patients = ps.getPatients(searchValue, start, length);
 		}
 		catch (APIAuthenticationException e) {
-			//patientList.add(Context.getMessageSourceService().getMessage("Patient.search.error") + " - " + e.getMessage());
-			//return patientList;
+			e.printStackTrace();
 		}
 
 		for (Patient p : patients)
@@ -292,14 +262,8 @@ public class DWRMyModuleService {
 	
  public Collection<String> loadFile(String idType){
 
-     /* String holder = idType; */
      String line ;
      ArrayList<String> locs = new ArrayList<String>();
-
-     for (Patient patient : Context.getPatientService().getAllPatients()) {
-         
-     }
-
 
      try{
 
