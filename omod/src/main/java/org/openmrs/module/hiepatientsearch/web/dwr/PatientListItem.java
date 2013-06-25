@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.hiepatientsearch.web.dwr;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
@@ -38,12 +40,29 @@ public class PatientListItem extends PersonListItem {
 	
 	private String birthdateString;
 	
+	private String pbd;
+	
+	public String getPbd() {
+		Date dob = getBirthdate();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		pbd = sdf.format(dob);
+		
+		return pbd;
+	}
+
+	public void setPbd(String pbd) {
+		this.pbd = pbd;
+	}
+
 	private Date birthdate;
 	
 	public Date getBirthdate() {
+		
 		birthdate= super.getBirthdate();
-		System.out.println("---------> " + birthdate);
-		return birthdate;
+		
+			return birthdate;
+		
+		
 	}
 	
 	public void setBirthdate(Date birthdate) {
@@ -83,9 +102,14 @@ public class PatientListItem extends PersonListItem {
 	 * @since 1.8
 	 */
 	public String getBirthdateString() {
+	
 		birthdateString = super.getBirthdateString();
-		System.out.println("------||-> " + birthdateString);
-		return birthdateString;
+		System.out.println("---------> " + birthdate);
+		
+			// TODO Auto-generated catch block
+			return birthdateString;
+		
+		
 	}
 	
 	/**

@@ -111,6 +111,8 @@ th.ui-state-default {
 	$j(document)
 			.ready(
 					function() {
+						
+						
 						$j("#patientSearch")
 								.keyup(
 										function() {
@@ -121,7 +123,7 @@ th.ui-state-default {
 													.prop('checked', false);
 											delay(function() {
 												keydown();
-											}, 400);
+											}, 200);
 
 										});
 
@@ -291,7 +293,7 @@ th.ui-state-default {
 		<div id="findRHEAPatients" style="display: none" align="left">
 			<div>
 				&nbsp;&nbsp; Patient Identifier or Patient Name:<input type="text"
-					id="patientSearch"><span id="loading" style="display: none">
+					id="patientSearch" style="width: 210px;" placeholder="Enter patient name or id"><span id="loading" style="display: none">
 					<input type="image"
 					src="${pageContext.request.contextPath}/moduleResources/hiepatientsearch/media/images/loading.gif">
 				</span><br /> <span id="advanced" style="display: none"><a href="#"

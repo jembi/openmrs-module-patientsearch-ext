@@ -32,13 +32,13 @@
 		</dependency>
 		
 				
-		<dependency>
+		<!--<dependency>
 
 			<groupId>org.openmrs.module</groupId>
 						
 			<artifactId>addresshierarchyrwanda-api</artifactId>
 												
-		</dependency>
+		</dependency>-->
 		
 						
 		<!-- End OpenMRS modules -->

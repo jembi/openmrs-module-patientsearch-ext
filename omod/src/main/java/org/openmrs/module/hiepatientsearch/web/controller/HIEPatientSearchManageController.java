@@ -27,8 +27,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PersonAddress;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.addresshierarchyrwanda.AddressHierarchy;
-import org.openmrs.module.addresshierarchyrwanda.AddressHierarchyService;
+//import org.openmrs.module.addresshierarchyrwanda.AddressHierarchy;
+//import org.openmrs.module.addresshierarchyrwanda.AddressHierarchyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,11 +57,11 @@ public class HIEPatientSearchManageController {
 			HttpServletResponse response) throws IOException {
 		model.addAttribute("user", Context.getAuthenticatedUser());
 		
-		model = populateModel(model);
+		//model = populateModel(model);
 		return "/module/hiepatientsearch/manage";
 	}
 			
-	private ModelMap populateModel(ModelMap model) {
+	/*private ModelMap populateModel(ModelMap model) {
 		AddressHierarchyService service = (AddressHierarchyService) Context
 				.getService(AddressHierarchyService.class);
 
@@ -116,7 +116,7 @@ public class HIEPatientSearchManageController {
 		model.addAttribute("village", villageString);
 		
 		return model;
-	}
+	}*/
 
 	@RequestMapping(value = "/module/hiepatientsearch/manage", method = RequestMethod.POST)
 	public String advancedSearch(@RequestParam(value="patientIds") String patientIds,
@@ -181,7 +181,7 @@ public class HIEPatientSearchManageController {
 		
 		model.addAttribute("patientLists", patientLists);
 		
-		model = populateModel(model);
+		//model = populateModel(model);
 		
 		return "/module/hiepatientsearch/manage";
 	}

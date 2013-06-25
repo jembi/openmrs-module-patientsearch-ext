@@ -123,7 +123,7 @@ function assess(id) {
 			tbody += '</td>'
 
 			tbody += '<td>';
-			tbody += patientList[i].birthdateString;
+			tbody += patientList[i].pbd;
 			tbody += '</td>'
 
 			tbody += '<td>';
@@ -278,7 +278,7 @@ function keydown() {
 			tbody += '</td>'
 
 			tbody += '<td>';
-			tbody += patientList[i].birthdateString;
+			tbody += patientList[i].pbd;
 			tbody += '</td>'
 
 			tbody += '<td>';

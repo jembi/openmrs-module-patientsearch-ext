@@ -26,5 +26,6 @@ public class  HIEPatientSearchServiceTest extends BaseModuleContextSensitiveTest
 	@Test
 	public void shouldSetupContext() {
 		assertNotNull(Context.getService(HIEPatientSearchService.class));
+		
 	}
 }
