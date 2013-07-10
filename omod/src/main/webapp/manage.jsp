@@ -123,7 +123,7 @@ th.ui-state-default {
 													.prop('checked', false);
 											delay(function() {
 												keydown();
-											}, 200);
+											}, 300);
 
 										});
 
@@ -244,12 +244,7 @@ th.ui-state-default {
 
 		//alert("Niveau :"+ level);
 		document.getElementById(selectToChange).innerHTML = optionsValues;
-		//alert(lines);
-		//optionsValues += '</select>';
-		//var options = $j('#district');
-		//options.replaceWith(optionsValues);
-
-		//optionsValues = '';
+		
 
 	}
 	function loadFile(addressValue, level) {
@@ -324,21 +319,8 @@ th.ui-state-default {
 					type="radio" name="gender" id="genderFemale" value="F"
 					onchange="assess(0);" class="filter">Female
 				</span><br /> <br />
-				<%--Province:
-				<form:select path="stateProvince" id="province"
-					items="${stateProvince}" onchange="assess(0);" />
-				District:
-				<form:select path="countryDistrict" id="district"
-					items="${countryDistrict}" onchange="assess(0);" />
-				Sector:
-				<form:select path="sector" id="sectors" items="${sector}"
-					onchange="assess(0);" />
-				Cell:
-				<form:select path="cell" id="cells" items="${cell}"
-					onchange="assess(0);" />
-				Village:
-				<form:select path="village" id="villages" items="${village}"
-					onchange="assess(0);" />--%>
+				
+
 
 				Province: <select name="prov" id="ad_province" class="adh filter"
 					onchange="assess(0);">

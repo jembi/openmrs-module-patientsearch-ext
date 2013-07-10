@@ -1,22 +1,5 @@
 var $f = jQuery.noConflict();
 
-/*function testing(){
-
-    var testVal = 'johnny';
-    window.alert(testVal);
-    DWRMyModuleService.loadFile(testVal,obx);
-
-    function obx(locs){
-        var listVals = 'Start <br />';
-          for(var i=0; i<locs.length ; i++) {
-             listVals += locs[i] +'<br />';
-          }
-                 listVals += 'End'
-           document.getElementById('baba').innerHTML = listVals;
-
-         }
-}*/
-
 function assess(id) {
       //alert("change");
 	 document.getElementById('filter_loading').style.display =   'inline';
@@ -224,8 +207,8 @@ function keydown() {
 
 	document.getElementById('errorMsg').innerHTML = "";
 	var patientSearchId = document.getElementById('patientSearch').value;
-	
-	if (patientSearchId == '') {
+	 
+	if (patientSearchId == '' || patientSearchId.length < 3) {
 		document.getElementById('errorMsg').innerHTML = "Please enter a Patient name or Identifier first ";
 		document.getElementById('filters').style.display = 'none';
         document.getElementById('advanced').style.display = 'none';
