@@ -368,7 +368,7 @@ th.ui-state-default {
 				<input type="hidden" id="sector" name="sector"> <input
 					type="hidden" id="cell" name="cell"> <input type="hidden"
 					id="village" name="village"> <input id="reset"
-					type="button" value="Reset!" style="float: right;">
+					type="button" value="Reset!" style="float: right;" onclick="keydown();">
 			</fieldset>
 			<br />
 
