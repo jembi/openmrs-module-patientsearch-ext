@@ -46,7 +46,7 @@ public class HIEPatientSearchManageController {
 	@RequestMapping(value = "/findPatient.htm", method = RequestMethod.GET)
 	public void manage(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		System.out.println("Test ! triggered by the patient search action");
+		log.info("The HIE patient search action has been triggered...");
 
 		response.sendRedirect(request.getContextPath()
 				+ "/module/hiepatientsearch/manage.form");
@@ -57,7 +57,6 @@ public class HIEPatientSearchManageController {
 			HttpServletResponse response) throws IOException {
 		model.addAttribute("user", Context.getAuthenticatedUser());
 		
-		//model = populateModel(model);
 		return "/module/hiepatientsearch/manage";
 	}
 			

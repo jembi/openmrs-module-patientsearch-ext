@@ -103,13 +103,9 @@ public class PatientListItem extends PersonListItem {
 	 */
 	public String getBirthdateString() {
 	
-		birthdateString = super.getBirthdateString();
-		System.out.println("---------> " + birthdate);
-		
-			// TODO Auto-generated catch block
-			return birthdateString;
-		
-		
+		birthdateString = super.getBirthdateString();	
+		return birthdateString;
+				
 	}
 	
 	/**
@@ -120,7 +116,6 @@ public class PatientListItem extends PersonListItem {
 	}
 	
 	public String getCountryDistrict() {
-		System.out.println("EEEEEEEEEEEEEE888888888888888888888888888" + countryDistrict);
 		if(countryDistrict == null || countryDistrict.isEmpty()){
 			countryDistrict = " ";
 		}
