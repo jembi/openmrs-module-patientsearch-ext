@@ -40,279 +40,198 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class HIEPatientSearchManageController {
-
+	
 	protected final Log log = LogFactory.getLog(getClass());
-
+	
 	@RequestMapping(value = "/findPatient.htm", method = RequestMethod.GET)
-	public void manage(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void manage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		log.info("The HIE patient search action has been triggered...");
-
-		response.sendRedirect(request.getContextPath()
-				+ "/module/hiepatientsearch/manage.form");
+		
+		response.sendRedirect(request.getContextPath() + "/module/hiepatientsearch/manage.form");
 	}
-
+	
 	@RequestMapping(value = "/module/hiepatientsearch/manage", method = RequestMethod.GET)
-	public String manager(ModelMap model, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	public String manager(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		model.addAttribute("user", Context.getAuthenticatedUser());
 		
 		return "/module/hiepatientsearch/manage";
 	}
-			
-	/*private ModelMap populateModel(ModelMap model) {
-		AddressHierarchyService service = (AddressHierarchyService) Context
-				.getService(AddressHierarchyService.class);
-
-		
-		List<AddressHierarchy> stateProvince = new ArrayList<AddressHierarchy>();
-		List<String> stateProvinceString = new ArrayList<String>();
-		stateProvinceString.add("select province");
-		List<AddressHierarchy> countryDistrict = new ArrayList<AddressHierarchy>();
-		List<String> countryDistrictString = new ArrayList<String>();
-		countryDistrictString.add("select district");
-		List<AddressHierarchy> sector = new ArrayList<AddressHierarchy>();
-		List<String> sectorString = new ArrayList<String>();
-		sectorString.add("select sector");
-		List<AddressHierarchy> cell = new ArrayList<AddressHierarchy>();
-		List<String> cellString = new ArrayList<String>();
-		cellString.add("select cell");
-		List<AddressHierarchy> village = new ArrayList<AddressHierarchy>();
-		List<String> villageString = new ArrayList<String>();
-		villageString.add("select village");
-		
-		stateProvince = service.searchHierarchy("%", 2);
-		countryDistrict = service.searchHierarchy("%", 3);
-		sector = service.searchHierarchy("%", 4);
-		cell = service.searchHierarchy("%", 5);
-		village = service.searchHierarchy("%", 6);
-
-		for(AddressHierarchy ah : stateProvince) {
-			stateProvinceString.add(ah.getLocationName());
-		}
-		
-		for(AddressHierarchy ah : countryDistrict) {
-			countryDistrictString.add(ah.getLocationName());
-		}
-		
-		for(AddressHierarchy ah : sector) {
-			sectorString.add(ah.getLocationName());
-		}
-		
-		for(AddressHierarchy ah : cell) {
-			cellString.add(ah.getLocationName());
-		}
-		
-		for(AddressHierarchy ah : village) {
-			villageString.add(ah.getLocationName());
-		}
-		
-		
-		model.addAttribute("stateProvince", stateProvinceString);
-		model.addAttribute("countryDistrict", countryDistrictString);
-		model.addAttribute("sector", sectorString);
-		model.addAttribute("cell", cellString);
-		model.addAttribute("village", villageString);
-		
-		return model;
-	}*/
-
+	
 	@RequestMapping(value = "/module/hiepatientsearch/manage", method = RequestMethod.POST)
-	public String advancedSearch(@RequestParam(value="patientIds") String patientIds,
-			@RequestParam("stateProvince") String stateProvince,
-			@RequestParam("countryDistrict") String countryDistrict,
-			@RequestParam("sector") String sector,
-			@RequestParam("cell") String cell,
-			@RequestParam("village") String village,
-			@RequestParam("moreThanAge") String moreThanAge,
-			@RequestParam("lessThanAge") String lessThanAge,
-			@RequestParam("date") Date dateString,
-			@RequestParam(value="gender") String gender, ModelMap model) {
-		String message = "Patient Id's" + patientIds + gender;
-
+	public String advancedSearch(@RequestParam(value = "patientIds") String patientIds,
+	        @RequestParam("stateProvince") String stateProvince, @RequestParam("countryDistrict") String countryDistrict,
+	        @RequestParam("sector") String sector, @RequestParam("cell") String cell,
+	        @RequestParam("village") String village, @RequestParam("moreThanAge") String moreThanAge,
+	        @RequestParam("lessThanAge") String lessThanAge, @RequestParam("date") Date dateString,
+	        @RequestParam(value = "gender") String gender, ModelMap model) {
+		
 		String[] patientIdList = patientIds.split(",");
-
+		
 		List<Patient> patients = new ArrayList<Patient>();
 		List<Patient> patientLists = new ArrayList<Patient>();
 		List<Patient> s = new ArrayList<Patient>();
-
+		
 		for (int i = 0; i < patientIdList.length; i++) {
-			patients = Context.getPatientService().getPatients(null,
-					patientIdList[i], null, false);
+			patients = Context.getPatientService().getPatients(null, patientIdList[i], null, false);
 			patientLists.add(patients.get(0));
 		}
-
+		
 		if (gender != null) {
 			patientLists = genderFilter(patientLists, gender);
 		}
-
+		
 		if (moreThanAge != "" || lessThanAge != "") {
 			patientLists = ageFilter(patientLists, moreThanAge, lessThanAge);
 		}
-
+		
 		if (dateString != null) {
 			Date date = null;
-			// patientLists = dobFilter(patientLists, date);
 		}
 		
-		if (!stateProvince.trim().isEmpty()){
+		if (!stateProvince.trim().isEmpty()) {
 			patientLists = stateProvinceFilter(patientLists, stateProvince);
-
+			
 		}
 		
-		if (!countryDistrict.trim().isEmpty()){
+		if (!countryDistrict.trim().isEmpty()) {
 			patientLists = countryDistrictFilter(patientLists, countryDistrict);
 		}
 		
-		if (!sector.trim().isEmpty()){
+		if (!sector.trim().isEmpty()) {
 			patientLists = sectorFilter(patientLists, sector);
-
+			
 		}
 		
-		if (!cell.trim().isEmpty()){
+		if (!cell.trim().isEmpty()) {
 			patientLists = cellFilter(patientLists, cell);
 		}
 		
-		if (!village.trim().isEmpty()){
+		if (!village.trim().isEmpty()) {
 			patientLists = villageFilter(patientLists, village);
-
+			
 		}
 		
 		model.addAttribute("patientLists", patientLists);
-		
-		//model = populateModel(model);
-		
 		return "/module/hiepatientsearch/manage";
 	}
-
-	private List<Patient> villageFilter(List<Patient> patientLists,
-			String village) {
+	
+	private List<Patient> villageFilter(List<Patient> patientLists, String village) {
 		Iterator<Patient> iterator = patientLists.iterator();
 		while (iterator.hasNext()) {
 			Patient patient = iterator.next();
 			PersonAddress pa = patient.getPersonAddress();
-			if(pa.getAddress1() != null && pa.getAddress1() != ""){
-			if (!pa.getAddress1().equals(village)){
-				iterator.remove();
-			}
+			if (pa.getAddress1() != null && pa.getAddress1() != "") {
+				if (!pa.getAddress1().equals(village)) {
+					iterator.remove();
+				}
 			}
 		}
-	return patientLists;
+		return patientLists;
 	}
-
+	
 	private List<Patient> cellFilter(List<Patient> patientLists, String cell) {
 		Iterator<Patient> iterator = patientLists.iterator();
 		while (iterator.hasNext()) {
 			Patient patient = iterator.next();
 			PersonAddress pa = patient.getPersonAddress();
-			if(pa.getAddress3() != null && pa.getAddress3() != ""){
-			if (!pa.getAddress3().equals(cell)){
-				iterator.remove();
-			}
+			if (pa.getAddress3() != null && pa.getAddress3() != "") {
+				if (!pa.getAddress3().equals(cell)) {
+					iterator.remove();
+				}
 			}
 		}
-	return patientLists;
+		return patientLists;
 	}
-
+	
 	private List<Patient> sectorFilter(List<Patient> patientLists, String sector) {
 		Iterator<Patient> iterator = patientLists.iterator();
 		while (iterator.hasNext()) {
 			Patient patient = iterator.next();
 			PersonAddress pa = patient.getPersonAddress();
-			if(pa.getCityVillage() != null && pa.getCityVillage() != ""){
-			if (!pa.getCityVillage().equals(sector)){
-				iterator.remove();
-			}
+			if (pa.getCityVillage() != null && pa.getCityVillage() != "") {
+				if (!pa.getCityVillage().equals(sector)) {
+					iterator.remove();
+				}
 			}
 		}
-	return patientLists;
+		return patientLists;
 	}
-
-	private List<Patient> countryDistrictFilter(List<Patient> patientLists,
-			String countryDistrict) {
+	
+	private List<Patient> countryDistrictFilter(List<Patient> patientLists, String countryDistrict) {
 		Iterator<Patient> iterator = patientLists.iterator();
 		while (iterator.hasNext()) {
 			Patient patient = iterator.next();
 			PersonAddress pa = patient.getPersonAddress();
-			if(pa.getCountyDistrict() != null && pa.getCountyDistrict() != ""){
-			if (!pa.getCountyDistrict().equals(countryDistrict)){
-				iterator.remove();
-			}
-			}
-		}
-	return patientLists;
-	}
-
-	private List<Patient> stateProvinceFilter(List<Patient> patientLists,
-			String stateProvince) {
-			Iterator<Patient> iterator = patientLists.iterator();
-			while (iterator.hasNext()) {
-				Patient patient = iterator.next();
-				PersonAddress pa = patient.getPersonAddress();
-
-				if(pa.getStateProvince() != null && pa.getStateProvince() != ""){
-				if (!pa.getStateProvince().equals(stateProvince)){
+			if (pa.getCountyDistrict() != null && pa.getCountyDistrict() != "") {
+				if (!pa.getCountyDistrict().equals(countryDistrict)) {
 					iterator.remove();
 				}
-				}
 			}
+		}
 		return patientLists;
 	}
-
-	private List<Patient> ageFilter(List<Patient> patientLists,
-			String moreThanAge, String lessThanAge) {
+	
+	private List<Patient> stateProvinceFilter(List<Patient> patientLists, String stateProvince) {
+		Iterator<Patient> iterator = patientLists.iterator();
+		while (iterator.hasNext()) {
+			Patient patient = iterator.next();
+			PersonAddress pa = patient.getPersonAddress();
+			
+			if (pa.getStateProvince() != null && pa.getStateProvince() != "") {
+				if (!pa.getStateProvince().equals(stateProvince)) {
+					iterator.remove();
+				}
+			}
+		}
+		return patientLists;
+	}
+	
+	private List<Patient> ageFilter(List<Patient> patientLists, String moreThanAge, String lessThanAge) {
 		if (moreThanAge != null && lessThanAge == null) {
 			Iterator<Patient> iterator = patientLists.iterator();
 			while (iterator.hasNext()) {
 				if (iterator.next().getAge() > Integer.parseInt(moreThanAge)) {
-
+					
 				} else {
 					iterator.remove();
 				}
 			}
-
+			
 		} else if (moreThanAge == null && lessThanAge != null) {
 			Iterator<Patient> iterator = patientLists.iterator();
 			while (iterator.hasNext()) {
 				if (iterator.next().getAge() < Integer.parseInt(lessThanAge)) {
-
+					
 				} else {
 					iterator.remove();
 				}
 			}
-
+			
 		} else if (moreThanAge != null && lessThanAge != null) {
 			Iterator<Patient> iterator = patientLists.iterator();
 			while (iterator.hasNext()) {
 				int age = iterator.next().getAge();
-				if (age > Integer.parseInt(moreThanAge)
-						&& age < Integer.parseInt(lessThanAge)) {
-
+				if (age > Integer.parseInt(moreThanAge) && age < Integer.parseInt(lessThanAge)) {
+					
 				} else {
 					iterator.remove();
 				}
 			}
-
+			
 		}
 		return patientLists;
 	}
-
 	
-	   @RequestMapping(value = "/redirect", method = RequestMethod.GET)
-	   public String redirect() {     
-	      return "manage";
-	   }
-	   
-	   @RequestMapping(value = "/manage", method = RequestMethod.GET)
-	   public String finalPage() {	     
-	      return "manage";
-	   }
-	   
-	private void dobFilter(List<Patient> patientLists, Date date) {
-		// TODO Auto-generated method stub
-
+	@RequestMapping(value = "/redirect", method = RequestMethod.GET)
+	public String redirect() {
+		return "manage";
 	}
-
+	
+	@RequestMapping(value = "/manage", method = RequestMethod.GET)
+	public String finalPage() {
+		return "manage";
+	}
+	
 	private List<Patient> genderFilter(List<Patient> patientLists, String gender) {
 		Iterator<Patient> iterator = patientLists.iterator();
 		while (iterator.hasNext()) {
@@ -322,5 +241,5 @@ public class HIEPatientSearchManageController {
 		}
 		return patientLists;
 	}
-
+	
 }

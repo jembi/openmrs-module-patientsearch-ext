@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.hiepatientsearch.web.dwr;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.web.dwr.PersonListItem;
-
 
 public class PatientListItem extends PersonListItem {
 	
@@ -49,19 +47,16 @@ public class PatientListItem extends PersonListItem {
 		
 		return pbd;
 	}
-
+	
 	public void setPbd(String pbd) {
 		this.pbd = pbd;
 	}
-
+	
 	private Date birthdate;
 	
-	public Date getBirthdate() {
-		
-		birthdate= super.getBirthdate();
-		
-			return birthdate;
-		
+	public Date getBirthdate() {	
+		birthdate = super.getBirthdate();
+		return birthdate;
 		
 	}
 	
@@ -72,29 +67,10 @@ public class PatientListItem extends PersonListItem {
 	public String getStateProvince() {
 		return stateProvince;
 	}
-
+	
 	public void setStateProvince(String stateProvince) {
 		this.stateProvince = stateProvince;
 	}
-
-	/*@Override
-	public String getAddress1() {
-		System.out.println("L" + getAddress1());
-		if(getAddress1()== null || getAddress1().isEmpty()){
-			setAddress1(" ");
-		}
-		return getAddress1();
-	}
-	
-	
-	@Override
-	public String getAddress2() {
-		if(getAddress2()== null || getAddress2().isEmpty()){
-			setAddress2(" ");
-		}
-		return getAddress2();
-	}
-	*/
 	
 	/**
 	 * Returns a formatted birthdate value
@@ -102,10 +78,10 @@ public class PatientListItem extends PersonListItem {
 	 * @since 1.8
 	 */
 	public String getBirthdateString() {
-	
-		birthdateString = super.getBirthdateString();	
+		
+		birthdateString = super.getBirthdateString();
 		return birthdateString;
-				
+		
 	}
 	
 	/**
@@ -116,24 +92,24 @@ public class PatientListItem extends PersonListItem {
 	}
 	
 	public String getCountryDistrict() {
-		if(countryDistrict == null || countryDistrict.isEmpty()){
+		if (countryDistrict == null || countryDistrict.isEmpty()) {
 			countryDistrict = " ";
 		}
 		return countryDistrict;
 	}
-
+	
 	public void setCountryDistrict(String countryDistrict) {
 		this.countryDistrict = countryDistrict;
 	}
-
+	
 	public String getCell() {
 		return cell;
 	}
-
+	
 	public void setCell(String cell) {
 		this.cell = cell;
 	}
-
+	
 	private String stateProvince = "";
 	
 	private String countryDistrict = "";
@@ -147,10 +123,6 @@ public class PatientListItem extends PersonListItem {
 	public PatientListItem() {
 	}
 	
-/*	public PatientListItem(Patient patient) {
-		this(patient, null);
-	}*/
-	
 	public PatientListItem(Patient patient) {
 		super(patient);
 		
@@ -158,7 +130,6 @@ public class PatientListItem extends PersonListItem {
 			
 			stateProvince = patient.getPersonAddress().getStateProvince();
 			countryDistrict = patient.getPersonAddress().getCountyDistrict();
-			//cell = patient.getPersonAddress().getAddress3();
 			cell = patient.getPersonAddress().getNeighborhoodCell();
 			sector = patient.getPersonAddress().getCityVillage();
 			village = patient.getPersonAddress().getAddress1();
@@ -248,17 +219,19 @@ public class PatientListItem extends PersonListItem {
 	public String getIdentifierTypeName() {
 		return identifierTypeName;
 	}
+	
 	public String getSector() {
 		return sector;
 	}
-
+	
 	public void setSector(String sector) {
 		this.sector = sector;
 	}
+	
 	public String getVillage() {
 		return village;
 	}
-
+	
 	public void setVillage(String village) {
 		this.village = village;
 	}

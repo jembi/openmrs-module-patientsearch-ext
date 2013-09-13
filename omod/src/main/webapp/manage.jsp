@@ -4,8 +4,6 @@
 <openmrs:htmlInclude
 	file="/moduleResources/hiepatientsearch/media/js/jquery-1.7.2.js" />
 
-
-<%--<openmrs:htmlInclude file="/dwr/interface/DWRReportingService.js" />--%>
 <openmrs:htmlInclude
 	file="/moduleResources/hiepatientsearch/scripts/paginate.js" />
 
@@ -129,9 +127,7 @@ th.ui-state-default {
 
 						$j('.adh').change(function() {
 							var level = $j(this).attr('id');
-							//alert("Level : "+level);
 							var selectedValue = $j(this).val();
-							//alert("Value : "+selectedValue);
 							if (selectedValue != "00") {
 								loadFile(selectedValue, level);
 							}
@@ -162,18 +158,14 @@ th.ui-state-default {
 	function processData(allText, id, level) {
 		var allTextLines = allText.split(/\r\n|\n/);
 		var headers = allTextLines[0].split(',');
-		//var lines = [];
 		var optionsValues = '<option value="00"> --Select-- </option>';
 		var voidValues = '<option value="00"> --Select-- </option>';
-		//optionsValues = '<select>';
-		//alert("ID :"+ id);
 
 		for ( var i = 0; i < allTextLines.length; i++) {
 			var data = allTextLines[i].split(',');
 			var selectToChange = "";
 			if (level == "ad_province") {
 				if (data[1] == id) {
-					//lines.push(data[2]);
 					optionsValues += '<option value="' + data[0] + '">'
 							+ data[2] + '</option>';
 				}
@@ -190,7 +182,6 @@ th.ui-state-default {
 			}
 			if (level == "ad_district") {
 				if (data[1] == id) {
-					//lines.push(data[2]);
 					optionsValues += '<option value="' + data[0] + '">'
 							+ data[2] + '</option>';
 				}
@@ -205,7 +196,6 @@ th.ui-state-default {
 			}
 			if (level == "ad_sector") {
 				if (data[1] == id) {
-					//lines.push(data[2]);
 					optionsValues += '<option value="' + data[0] + '">'
 							+ data[2] + '</option>';
 				}
@@ -219,7 +209,6 @@ th.ui-state-default {
 			}
 			if (level == "ad_cell") {
 				if (data[1] == id) {
-					//lines.push(data[2]);
 					optionsValues += '<option value="' + data[0] + '">'
 							+ data[2] + '</option>';
 				}
@@ -242,18 +231,14 @@ th.ui-state-default {
 			optionsValues += '<option value="55">Show All Villages</option>';
 		}
 
-		//alert("Niveau :"+ level);
 		document.getElementById(selectToChange).innerHTML = optionsValues;
 		
 
 	}
 	function loadFile(addressValue, level) {
 		var path = "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/";
-		//var path = ctx+"moduleResources/hiepatientsearch/";
-		//alert(ctx);
-		//var path = "";
+
 		if (level == "ad_province") {
-			//path += "${pageContext.request.contextPath}/moduleResources/hiepatientsearch/locations/District.txt";
 			path += "District.txt";
 		}
 		if (level == "ad_district") {
@@ -274,7 +259,6 @@ th.ui-state-default {
 				processData(data, addressValue, level);
 			}
 		});
-
 	}
 </script>
 <h2>
@@ -411,6 +395,5 @@ th.ui-state-default {
 			parameters="personType=patient|postURL=${baseUrl}/admin/person/addPerson.htm|viewType=shortEdit" />
 	</openmrs:hasPrivilege>
 </c:if>
-
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>
