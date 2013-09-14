@@ -128,13 +128,17 @@ public class PatientListItem extends PersonListItem {
 		
 		if (patient != null) {
 			
+			if(patient.getPersonAddress() != null){
 			stateProvince = patient.getPersonAddress().getStateProvince();
 			countryDistrict = patient.getPersonAddress().getCountyDistrict();
 			cell = patient.getPersonAddress().getNeighborhoodCell();
 			sector = patient.getPersonAddress().getCityVillage();
 			village = patient.getPersonAddress().getAddress1();
-			patientId = patient.getPatientId();
+			}
 			
+			patientId = patient.getPatientId();
+			setPatientId(patient.getPatientId());
+
 			// get patient's identifiers
 			boolean first = true;
 			for (PatientIdentifier pi : patient.getIdentifiers()) {

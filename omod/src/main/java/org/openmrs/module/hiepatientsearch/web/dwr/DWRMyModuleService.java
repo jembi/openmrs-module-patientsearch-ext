@@ -23,6 +23,9 @@ public class DWRMyModuleService {
 	private static Integer maximumResults;
  
  public Collection<PatientListItem> filter(String ids, String moreThanAge, String lessThanAge, String gender, String date, String province, String district, String sectors, String cells, String villages) throws ParseException {
+	 List<PatientListItem> patientList = null;
+	 
+	 if(ids != null){
 	 ids = ids.trim();
 	 String[] idList = ids.split(",");
 	 List<Patient> patients = new ArrayList<Patient>();
@@ -173,10 +176,12 @@ public class DWRMyModuleService {
 		 }
 	 }
 	 	 
-	 List<PatientListItem> patientList = new Vector<PatientListItem>();
+	 patientList = new Vector<PatientListItem>();
 	 
 	 for (Patient p : patients)
 			patientList.add(new PatientListItem(p));
+			 
+	 }
 	return patientList;
 }
  
@@ -232,9 +237,9 @@ public class DWRMyModuleService {
 			e.printStackTrace();
 		}
 
-		for (Patient p : patients)
+		for (Patient p : patients){
 			patientList.add(new PatientListItem(p));
-
+		}
 		return patientList;
 	}
 	

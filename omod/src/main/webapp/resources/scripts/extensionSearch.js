@@ -73,8 +73,10 @@ function assess(id) {
 			idString = idString + "," + row.cells[0].innerHTML;
 		}
 	}
+	
+	
 
-	if (idString != null && idString != "") {
+	if (idString != null || idString != "") {
 		DWRMyModuleService.filter(idString, moreThanAgeString,
 				lessThanAgeString, gender, dob, province, district, sectors,
 				cells, villages, obj);
